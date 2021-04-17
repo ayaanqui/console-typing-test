@@ -28,8 +28,8 @@ public class App {
         return allWords;
     }
 
-    private static boolean skip() {
-        return r.nextInt(2) == 1 ? true : false;
+    private static int getRandom(int range) {
+        return r.nextInt(range);
     }
 
     private static String generateParagraph(Set<String> words, int minSize, int maxSize, boolean specailChars,
@@ -38,15 +38,10 @@ public class App {
             return w.length() >= minSize && w.length() <= maxSize;
         });
 
+        Object[] reducedWordsArray = reducedWords.toArray();
         StringBuilder paragraph = new StringBuilder();
-        Iterator<String> it = reducedWords.iterator();
         for (int i = 0; i < size; i++) {
-            String word = it.next();
-            if (skip()) {
-                i--;
-                continue;
-            }
-            paragraph.append(word + " ");
+            paragraph.append(reducedWordsArray[getRandom(reducedWordsArray.length)] + " ");
         }
         return paragraph.toString();
     }
