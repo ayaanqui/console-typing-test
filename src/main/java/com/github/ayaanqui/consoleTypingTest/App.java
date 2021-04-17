@@ -4,12 +4,14 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Stream;
 
 public class App {
     private static String filePath = "./src/main/resources/";
+    private static Random r = new Random();
 
     private static Set<String> addWordsFromFiles(String... files) {
         Set<String> allWords = new HashSet<>();
@@ -26,6 +28,10 @@ public class App {
         return allWords;
     }
 
+    private static boolean skip() {
+        return r.nextInt(2) == 1 ? true : false;
+    }
+
     private static String generateParagraph(Set<String> words, int minSize, int maxSize, boolean specailChars,
             int size) {
         Stream<String> reducedWords = words.stream().filter(w -> {
@@ -35,8 +41,12 @@ public class App {
         StringBuilder paragraph = new StringBuilder();
         Iterator<String> it = reducedWords.iterator();
         for (int i = 0; i < size; i++) {
-            paragraph.append(it.next());
-            paragraph.append(" ");
+            String word = it.next();
+            if (skip()) {
+                i--;
+                continue;
+            }
+            paragraph.append(word + " ");
         }
         return paragraph.toString();
     }
@@ -47,6 +57,6 @@ public class App {
         Set<String> words = addWordsFromFiles("words_alpha.txt", "words.txt", "words_english.txt");
         System.out.println("Total words loaded: " + words.size() + "\n");
 
-        System.out.println(generateParagraph(words, 1, 8, false, 50));
+        System.out.println(generateParagraph(words, 3, 8, false, 50));
     }
 }
